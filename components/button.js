@@ -15,6 +15,8 @@ export default function ButtonBlue({text, onPress}) {
   )
 }
 
+
+
 const styles = StyleSheet.create({
   btnContainerStyle: {
     backgroundColor: '#6DAAC3',
@@ -31,5 +33,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
     
   }
+ 
 })
 

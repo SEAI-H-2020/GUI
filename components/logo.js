@@ -13,9 +13,9 @@ export default function LogoBig() {
 
   const styles = StyleSheet.create({
   logoGrande:{
-      width: 330, 
+    width: 330, 
     height: 200,
-    marginBottom: '16%',
+    marginBottom: '10%',
     marginTop: '10%'
   }
 })
