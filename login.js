@@ -12,10 +12,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const Login = ({ navigation }) =>  {
   
-  const [email, setEmail] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState('true');
-    
+  const [error, setError] = useState('');  
+
+
+
   return (
     <View style={styles.container}>
     
@@ -28,9 +31,10 @@ const Login = ({ navigation }) =>  {
            
           <TextInput  
             style={styles.inputText}
-            placeholder="Email..." 
+            placeholder="Username..." 
             placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({email:text})}/>
+            onChangeText={(val)=> setUserName(val)}/>
+            
       </View>
       
       <Text style={styles.title}> Password: </Text>
@@ -41,7 +45,8 @@ const Login = ({ navigation }) =>  {
           style={styles.inputText}
           placeholder="Password..." 
           placeholderTextColor="#003f5c"
-          onChangeText={text => this.setState({email:text})}/>
+          secureTextEntry
+          onChangeText={(val)=> setPassword(val)}/>
       </View>
     
        
@@ -90,7 +95,8 @@ inputView:{
   justifyContent:"center",
   padding:20,
   borderColor: '#0C688F',
-  borderWidth: 2
+  borderWidth: 2,
+  backgroundColor: 'white'
 },
 inputText:{
   height:50,
