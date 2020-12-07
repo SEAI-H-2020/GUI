@@ -1,13 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput , Image} from 'react-native'
-import { CheckBox } from 'react-native-elements'
-import ButtonBlue  from './components/button';
-import LogoBig from './components/logo'
+import 'react-native-gesture-handler';
+//import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-/*import Login from './login';*/
-/*import Register from './register';*/
+//import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput} from 'react-native';
+//import { CheckBox } from 'react-native-elements';
+import ButtonBlue from '../components/button';
+import LogoBig from '../components/logo';
+
 
 
 const Login = ({ navigation }) =>  {
@@ -50,7 +50,7 @@ const Login = ({ navigation }) =>  {
       </View>
     
        
-    <ButtonBlue text='Confirm'/>
+    <ButtonBlue text='Confirm'onPress={() => navigation.navigate('chooseBox')}/>
     <ButtonBlue text='Register' onPress={() => navigation.navigate('Profile', { name: 'Jane' })} />
     
     </View>
@@ -63,7 +63,7 @@ const Login = ({ navigation }) =>  {
 const styles = StyleSheet.create({
 container: {
   flex: 1,
-  
+  backgroundColor: '#ffffff',
   alignItems: 'center',
   
 },
