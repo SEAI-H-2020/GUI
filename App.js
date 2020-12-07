@@ -1,39 +1,36 @@
-
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput , Image} from 'react-native'
-import ButtonBlue  from './components/button';
+import 'react-native-gesture-handler';
+//import { StatusBar } from 'expo-status-bar';
+import * as React from 'react';
+//import {Button, View, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LogoBig from './components/logo'
-import Login from './login';
-import { CheckBox } from 'react-native-elements'
-import Register from './register';
-
-
-
-    
-
-const ProfileScreen = ({ navigation, route }) => {
-  return <Text>This is {route.params.name}'s profile</Text>;
-};
-
-
+import Login from './pages/login';
+import Register from './pages/register';
+import chooseBox from './pages/choosebox';
+import main from './pages/main';
+import reportProblems from './pages/report';
+import boxSettings from './pages/boxSettings';
+import userSettings from './pages/userSettings';
+import tempPage from './pages/temp';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Login}
-          options={{ title: 'Welcome' }}
-        />
+      <Stack.Navigator initialRouteName="login">
+        <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="Profile" component={Register} />
+        <Stack.Screen name="chooseBox" component = {chooseBox} />
+        <Stack.Screen name="mainPage" component = {main} />
+        <Stack.Screen name="ReportProblems" component={reportProblems} />
+        <Stack.Screen name="BoxSettings" component={boxSettings} />
+        <Stack.Screen name="UserSettings" component={userSettings} />
+        <Stack.Screen name="tempPage" component={tempPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
 export default App;
 
