@@ -4,18 +4,22 @@ import {ScrollView, View, Text, StyleSheet} from 'react-native';
 import ButtonBlue  from '../components/button';
 import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
+import FormInputReport from '../components/inputText_2';
 import FormInput from '../components/inputText';
 
 export default function reportProblems ({navigation}) {
     return(
         <View style={styles.container}>
             <LogoSmall/>
+            <View style={styles.textContainer}>
+                <Text style={styles.normalText}> Type problem: </Text>
+                <FormInput/>
+            </View>
 
-            <Text style={styles.normalText}> Type problem: </Text>
-            <FormInput/>
-
-            <Text style={styles.normalText}> Tell us more: </Text>
-            <FormInput/>
+            <View style={styles.textContainer}>
+                <Text style={styles.normalText}> Tell us more: </Text>
+                <FormInputReport/>
+            </View>
 
             <ButtonBlue 
                 text='Submit'
@@ -34,12 +38,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
       },
 
+    textContainer: {
+        width: '90%',
+        alignSelf: 'flex-start',
+        margin: '4%',
+        marginLeft: '10%',
+        /*borderColor: '#375764',
+        borderStyle: 'solid',
+        borderWidth: 3,*/
+    },
+
     normalText: {
         fontFamily: 'Montserrat',
         fontStyle: 'normal',
-        fontWeight: '600',
-        textAlign: 'left',
-        fontSize: 14,
-        borderColor: '#375764',
+        fontWeight: '800',
+        fontSize: 15,
     }
 })

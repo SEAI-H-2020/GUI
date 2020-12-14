@@ -1,22 +1,22 @@
 import 'react-native-gesture-handler';
 //import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import {View, Text, StyleSheet,TouchableOpacity, Image} from 'react-native';
-//import ButtonBox  from '../components/buttonBox';
+import {View, Text, StyleSheet,TouchableOpacity, Image, ScrollView} from 'react-native';
 import ButtonBlue  from '../components/button';
-import LogoSmall from '../components/logo';
+import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
-import ValueBox from '../components/valueBox';
+import SettingsBox from '../components/settingsBox';
 
 export default function boxSettings ({navigation}) {
     return(
+        
         <View style={styles.container}>
-
             <LogoSmall/>
-
-            <Text style={styles.Text}> Box name: </Text>
+            <ScrollView>
+            
+            <Text style={styles.text}> Box name: </Text>
             <View style={styles.setting}>
-                <ValueBox style={{width:'50%'}}/>
+                <SettingsBox/>
                 <TouchableOpacity onPress={() => navigation.navigate('boxSettings')}>
                     <Image
                         source={require('../images/edit.png')}
@@ -24,6 +24,32 @@ export default function boxSettings ({navigation}) {
                 </TouchableOpacity>
             </View>
 
+            <Text style={styles.text}> Instalation date: </Text>
+            <View style={styles.setting}>
+                <SettingsBox/>
+                <TouchableOpacity onPress={() => navigation.navigate('boxSettings')}>
+                    <Image
+                        source={require('../images/edit.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <Text style={styles.text}> Sample period: </Text>
+            <View style={styles.setting}>
+                <SettingsBox/>
+                <TouchableOpacity onPress={() => navigation.navigate('boxSettings')}>
+                    <Image
+                        source={require('../images/edit.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <ButtonBlue 
+                text='Reset'
+                onPress ={() => navigation.navigate('boxSettings')}>
+            </ButtonBlue>
+
+            </ScrollView>
             <Navbar/>
         </View>
     );
@@ -42,5 +68,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         marginRight: '2%'
+    },
+
+    text: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Montserrat',
+        fontStyle: 'normal',
+        fontWeight: '800',
+        fontSize: 15,
+        marginBottom: '2%',
+        marginLeft: '8%',
     }
 })

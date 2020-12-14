@@ -1,17 +1,99 @@
 import 'react-native-gesture-handler';
 //import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 //import ButtonBox  from '../components/buttonBox';
-import ButtonBlue  from '../components/button';
-import LogoSmall from '../components/logo';
+import SettingsBox  from '../components/settingsBox';
+import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
-import ValueBox from '../components/valueBox';
+//import ValueBox from '../components/valueBox';
 
-export default function userSettings () {
+export default function userSettings ({navigation}) {
     return(
-        <View>
-            <Text> Hello there, user settings page </Text>
+        <View style={styles.container}>
+            <LogoSmall/>
+            <ScrollView>
+           
+            <Text style={styles.text}> Name: </Text>
+            <View style={styles.setting}>
+                <SettingsBox/>
+                <TouchableOpacity onPress={() => navigation.navigate('userSettings')}>
+                    <Image
+                        source={require('../images/edit.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <Text style={styles.text}> Email Address: </Text>
+            <View style={styles.setting}>
+                <SettingsBox/>
+                <TouchableOpacity onPress={() => navigation.navigate('userSettings')}>
+                    <Image
+                        source={require('../images/edit.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <Text style={styles.text}> Unit System: </Text>
+            <View style={styles.setting}>
+                <SettingsBox
+                    text='Metric'/>
+                <TouchableOpacity onPress={() => navigation.navigate('userSettings')}>
+                    <Image
+                        source={require('../images/edit.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <Text style={styles.text}> Boxes: </Text>
+            <View style={styles.setting}>
+                <SettingsBox
+                    text='Smart Sensor Box 1'/>
+                <TouchableOpacity onPress={() => navigation.navigate('userSettings')}>
+                    <Image
+                        source={require('../images/delete.png')}
+                        style={styles.icon}/>
+                </TouchableOpacity>
+            </View>
+
+            <Image
+                source={require('../images/logout.png')}
+                style={styles.logout}/>
+
+            </ScrollView>
+            <Navbar/>
+            
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#ffffff'
+    },
+
+    setting: {
+        flex: 2,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        marginRight: '2%'
+    },
+
+    text: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Montserrat',
+        fontStyle: 'normal',
+        fontWeight: '800',
+        fontSize: 15,
+        marginBottom: '2%',
+        marginLeft: '8%',
+    },
+
+    logout: {
+        alignSelf: 'center',
+        margin: '10%'
+    }
+})
