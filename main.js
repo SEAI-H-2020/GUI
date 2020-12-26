@@ -1,15 +1,34 @@
 import 'react-native-gesture-handler';
-import * as React from 'react';
-import {View, ScrollView, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View, TouchableOpacity, StyleSheet, Image, ActivityIndicator, FlatList, Text} from 'react-native';
 import ButtonBlue  from '../components/button';
 import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
 import ValueBox from '../components/valueBox';
+import tempPage from './temp';
+//import currentMeasures from '../api/currentMeasures';
+import valueBox from '../components/valueBox';
 
 
-function main ({navigation}) {
+const main = (props) => {
+
+    const {navigation} = props;
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+
+
+    //console.log("teste");
+    useEffect(() => {
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/')
+          .then((response) => response.json())
+          .then((json) => setData(json.measurement[0]))
+          .catch((error) => console.error(error))
+          .finally(() => setLoading(false));
+      }, []);
+
+    //console.log(data.temperature);
+
     return (
-        //<ScrollView>
             <View style={styles.container}>
 
                 <LogoSmall/>
@@ -22,14 +41,15 @@ function main ({navigation}) {
                                 source={require('../images/temp.png')}
                             />
                         </TouchableOpacity>
-                        <ValueBox />
-                    </View>
-                    <View style={styles.iconPlusValue}>
+                        <ValueBox value={data.temperature}/> 
+                </View>
+
+                <View style={styles.iconPlusValue}>
                         <Image 
                             style={{width: 100, height: 99, marginBottom: '1%'}}
                             source={require('../images/humidity.png')}
                         />
-                        <ValueBox />
+                        <ValueBox value={data.humidity}/>
                     </View>
                 </View>
                 
@@ -39,14 +59,14 @@ function main ({navigation}) {
                             style={{width: 90, height: 82, marginBottom: '1%'}}
                             source={require('../images/noise.png')}
                         />
-                        <ValueBox />
+                        <ValueBox value={data.noise_level}/>
                     </View>
                     <View style={styles.iconPlusValue}>
                         <Image 
                             style={{width: 100, height: 82, marginBottom: '1%'}}
                             source={require('../images/wind.png')}
                         />
-                        <ValueBox />
+                        <ValueBox value={data.wind}/>
                     </View>
                 </View>
 
@@ -60,10 +80,9 @@ function main ({navigation}) {
                     onPress = {() => navigation.navigate('chooseBox')}>
                 </ButtonBlue>
 
-            <Navbar/>
+                <Navbar/>
 
             </View>
-       // </ScrollView>
     );
 }
 
