@@ -2,22 +2,52 @@ import 'react-native-gesture-handler';
 //import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 //import { createStackNavigator } from '@react-navigation/stack';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TextInput, } from 'react-native';
 //import { CheckBox } from 'react-native-elements';
 import ButtonBlue from '../components/button';
 import LogoBig from '../components/logo';
+import Interface from './apiTest';
+import AsyncStorage from '@react-native-community/async-storage';
+
+
 
 
 
 const Login = ({ navigation }) =>  {
-  
+  const [isLoading, setLoading] = useState(true);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [checked, setChecked] = useState('true');
+  const [request, setRequest] = useState('false');
   const [error, setError] = useState('');  
+  const [response, setResponse] = useState('');  
+  
+
+  
+  
 
 
+const _login=() => {
+  fetch('http://smartsensorbox.ddns.net:5000/users/'+username+'/'+password)
+    .then((response) => response.json())
+    .then((json) => setResponse(json.result))
+    .catch((error) => console.error(error))
+    .finally(() => setLoading(false));
+    console.log(response);
+    if(response=='Correct username and password!'){
+      // alert('logged in');
+       setRequest('false');
+       navigation.navigate('chooseBox');
+   
+     } else if(response=='Incorrect password!'){
+         alert(' password is incorrrect');
+         setRequest('false');
+     }
+     else if(response=='Check the username.'){
+       alert('Username is incorrrect');
+       setRequest('false');
+     }
+};
 
   return (
     <View style={styles.container}>
@@ -33,8 +63,10 @@ const Login = ({ navigation }) =>  {
             style={styles.inputText}
             placeholder="Username..." 
             placeholderTextColor="#003f5c"
-            onChangeText={(val)=> setUserName(val)}/>
-            
+            onChangeText={(val)=> setUserName(val)}
+            value={username}
+            autoCapitalize="none"
+            />
       </View>
       
       <Text style={styles.title}> Password: </Text>
@@ -46,18 +78,26 @@ const Login = ({ navigation }) =>  {
           placeholder="Password..." 
           placeholderTextColor="#003f5c"
           secureTextEntry
-          onChangeText={(val)=> setPassword(val)}/>
+          onChangeText={(val)=> setPassword(val)}
+          value={password}
+          />
       </View>
     
-       
-    <ButtonBlue text='Confirm'onPress={() => navigation.navigate('chooseBox')}/>
-    <ButtonBlue text='Register' onPress={() => navigation.navigate('Profile', { name: 'Jane' })} />
+       {Interface()}
+
+       <ButtonBlue 
+                  text='Confirm'
+                  onPress={_login}
+                  //onPress={()=>setRequest('true')}
+                  //onPress={() => navigation.navigate('mainPage')}
+                  />
+        <ButtonBlue text='Register' onPress={() => navigation.navigate('Profile', { name: 'Jane' })} />
     
     </View>
       );
     
     }
-    /*<ButtonBlue text='Confirm' onPress={this.props.handleSubmit}/>*/
+   /* <ButtonBlue text='Confirm'onPress={() => navigation.navigate('mainPage')}/>*/
     export default Login;
 
 const styles = StyleSheet.create({
