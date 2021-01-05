@@ -1,21 +1,20 @@
 import 'react-native-gesture-handler';
 
-import React, { useState } from 'react'
-import {View, Text, StyleSheet, Image, Dimensions, TouchableOpacity} from 'react-native';
-//import ButtonBox  from '../components/buttonBox';
+import React, { useState, useEffect } from 'react'
+import {View, Text, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import ButtonBlue  from '../components/button';
-import LogoSmall from '../components/logo';
+import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
 import ValueBox from '../components/valueBox';
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-
 import {LineChart } from "react-native-chart-kit";
+import 'react-native-svg';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
+//moment(variavel, "YYYY-MM-DD hh:mm:ss");
 
 const screenWidth = Dimensions.get("window").width;
-
 
 export default function tempPage () {
     const [date, setDate] = useState(new Date(1598051730000));
@@ -24,8 +23,6 @@ export default function tempPage () {
     const [modeFinal, setModeFinal] = useState('date');
     const [show, setShow] = useState(false);
     const [showFinal, setShowFinal] = useState(false);
-    
-    
     
     const chartConfig = {
         backgroundGradientFrom: "white",
@@ -62,15 +59,13 @@ export default function tempPage () {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
-        
-
+    
       };
       const onChangeFinal = (event, selectedDate) => {
         const currentDate = selectedDate || dateFinal;
         setShowFinal(Platform.OS === 'ios');
         setDateFinal(currentDate);
-        
-
+      
       };
       const showDatepicker = () => {
         showMode('date');
@@ -79,85 +74,113 @@ export default function tempPage () {
       const showDatepickerFinal = () => {
         showModeFinal('date');
       };
+
+    const [isLoading, setLoading] = useState(true);
+    const [min, setMin] = useState([]);
+    const [max, setMax] = useState([]);
+
+    useEffect(() => {
+     
+      if(global.unitSystem == 'Metric') {
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/min')
+        .then((response) => response.json())
+        .then((json) => setMin(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+        
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/max')
+        .then((response) => response.json())
+        .then((json) => setMax(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+        }
+
+      else { 
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/min')
+        .then((response) => response.json())
+        .then((json) => setMin(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+        
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/max')
+        .then((response) => response.json())
+        .then((json) => setMax(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+          
+      } 
+
+  });
      
     return(
-        <View style={styles.container}>
-             
-             <LogoSmall/>
+      
+      <View style={styles.container}>
+        <LogoSmall/>
+        <ScrollView>
+          
+          {/*<View style={styles.container_values}>
+              <View style={styles.iconPlusValue}>
+                  <Text style={styles.title} > Day average: </Text>
+                  <ValueBox />
+              </View>
+              <View style={styles.iconPlusValue}>
+                  <Text style={styles.title}>Night average: </Text>
+                  <ValueBox />
+              </View>
+          </View>*/}
+          
+          <View style={styles.container_values}>
+              <View style={styles.iconPlusValue}>
+                  <Text style={styles.title}> Maximum: </Text>
+                  <ValueBox value={min.temperature}/>
+              </View>
+              <View style={styles.iconPlusValue}>
+                  <Text style={styles.title}> Minimum: </Text>
+                  <ValueBox value={max.temperature}/>
+              </View>
+          </View>
+
+          <LineChart 
+            data={data}  
+            width={screenWidth}  height={200}  
+            chartConfig={chartConfig}/>
+          
+          <View>
+            <View style={styles.container_dates}>
             
-            <View style={styles.container_values}>
-                <View style={styles.iconPlusValue}>
-                    <Text style={styles.title} > Day avarage: </Text>
-                    
-                    <ValueBox />
-                    
-                </View>
-                <View style={styles.iconPlusValue}>
-                    <Text style={styles.title}>Night avarage: </Text>
-                    
-                    <ValueBox />
-        
-                </View>
+              <ButtonBlue text='Data Inicial'onPress={showDatepicker}/>
+              <ButtonBlue text='Data Final'onPress={showDatepickerFinal}/>
+                
             </View>
-            
-
-            <View style={styles.container_values}>
-                <View style={styles.iconPlusValue}>
-                    <Text style={styles.title}> Maximum: </Text>
-                    
-                    <ValueBox />
         
-                </View>
-                <View style={styles.iconPlusValue}>
-                    <Text style={styles.title}> Minimum: </Text>
-                    
-                    <ValueBox />
-        
-                </View>
-            </View>
-            <LineChart  data={data}  width={screenWidth}  height={200}  chartConfig={chartConfig}/>
-            
-            <View>
-                <View style={styles.container_dates}>
-                  
-                    
-                    
-                  <ButtonBlue text='Data Inicial'onPress={showDatepicker}/>
-                  <ButtonBlue text='Data Final'onPress={showDatepickerFinal}/>
-                    
-                </View>
-            
-                {show && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date} /* a data está aqui guadada mas nao percebo o formato*/
-                  mode={mode}
-                  is24Hour={true}
-                  display="default"
-                  onChange={onChange}
-                />
-                 )}
-                {showFinal && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={dateFinal} /* a data está aqui guadada mas nao percebo o formato*/
-                  mode={modeFinal}
-                  is24Hour={true}
-                  display="default"
-                  onChange={onChangeFinal}
-                />
-                )}
-  </View>
-                  
-  <Navbar/>
-</View>
-
-
+            {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date} /* a data está aqui guadada mas nao percebo o formato*/
+              mode={mode}
+              is24Hour={true}
+              display="default"
+              onChange={onChange}
+            />
+              )}
+            {showFinal && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dateFinal} /* a data está aqui guadada mas nao percebo o formato*/
+              mode={modeFinal}
+              is24Hour={true}
+              display="default"
+              onChange={onChangeFinal}
+            />
+            )}
+          </View>
+        </ScrollView>           
+       <Navbar/>
+      </View>
+    
     );
 }
-
-
-
 
 const styles = StyleSheet.create({
     container: {
@@ -170,20 +193,22 @@ const styles = StyleSheet.create({
     container_values: {
         flex: 2,
         alignItems: 'flex-start',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         flexDirection: 'row',
-        maxHeight: 100,
-        marginLeft:'8%',
+        maxHeight: 150,
+        marginLeft:'4%',
+        marginRight: '4%',
            
     },
     iconPlusValue: {
         flex: 2,
         flexDirection: 'column',
         justifyContent: 'space-between',
+        alignItems: 'center',
        
     },
     title:{
-        fontWeight:"bold",
+        fontWeight:"normal",
         fontSize:15,
         color: 'black',
         fontFamily: "Montserrat"     
@@ -194,8 +219,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         maxHeight: 100,
-       maxWidth: '100%'
-           
-    },
-      
-}); 
+        maxWidth: '100%'      
+    },    
+});
+
+
+
