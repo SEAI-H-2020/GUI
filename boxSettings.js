@@ -1,18 +1,17 @@
 import 'react-native-gesture-handler';
-//import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
+import React from 'react';
 import {View, Text, StyleSheet,TouchableOpacity, Image, ScrollView} from 'react-native';
 import ButtonBlue  from '../components/button';
 import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
 import SettingsBox from '../components/settingsBox';
+import PeriodPicker from '../components/periodPicker';
 
 export default function boxSettings ({navigation}) {
     return(
         
         <View style={styles.container}>
             <LogoSmall/>
-            <ScrollView>
             
             <Text style={styles.text}> Box name: </Text>
             <View style={styles.setting}>
@@ -36,7 +35,7 @@ export default function boxSettings ({navigation}) {
 
             <Text style={styles.text}> Sample period: </Text>
             <View style={styles.setting}>
-                <SettingsBox/>
+                <PeriodPicker/>
                 <TouchableOpacity onPress={() => navigation.navigate('boxSettings')}>
                     <Image
                         source={require('../images/edit.png')}
@@ -44,12 +43,12 @@ export default function boxSettings ({navigation}) {
                 </TouchableOpacity>
             </View>
 
-            <ButtonBlue 
+           {/* <ButtonBlue 
+                style={styles.button}>
                 text='Reset'
                 onPress ={() => navigation.navigate('boxSettings')}>
-            </ButtonBlue>
+           </ButtonBlue>*/}
 
-            </ScrollView>
             <Navbar/>
         </View>
     );
@@ -59,15 +58,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        flexDirection: 'column',
         backgroundColor: '#ffffff'
     },
 
     setting: {
-        flex: 2,
+        height: 45,
         alignItems: 'flex-start',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginRight: '2%'
+        bottom: 1,
+        marginRight: '2%',
+        marginBottom: '1%',
+        marginVertical: '0.5%',
     },
 
     text: {
@@ -78,5 +81,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: '2%',
         marginLeft: '8%',
-    }
+    }, 
+
+
+   
 })

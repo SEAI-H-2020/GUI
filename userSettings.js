@@ -1,12 +1,12 @@
 import 'react-native-gesture-handler';
-//import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
+import React, {useState, setState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
-//import ButtonBox  from '../components/buttonBox';
 import SettingsBox  from '../components/settingsBox';
 import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
-//import ValueBox from '../components/valueBox';
+import UnitPicker from '../components/unitPicker';
+
+//import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function userSettings ({navigation}) {
     return(
@@ -36,8 +36,7 @@ export default function userSettings ({navigation}) {
 
             <Text style={styles.text}> Unit System: </Text>
             <View style={styles.setting}>
-                <SettingsBox
-                    text='Metric'/>
+                <UnitPicker/>
                 <TouchableOpacity onPress={() => navigation.navigate('userSettings')}>
                     <Image
                         source={require('../images/edit.png')}
@@ -95,5 +94,7 @@ const styles = StyleSheet.create({
     logout: {
         alignSelf: 'center',
         margin: '10%'
-    }
+    },
+
+    
 })
