@@ -5,6 +5,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './pages/login';
+
 import Register from './pages/register';
 import chooseBox from './pages/choosebox';
 import main from './pages/main';
@@ -13,12 +14,15 @@ import boxSettings from './pages/boxSettings';
 import userSettings from './pages/userSettings';
 import tempPage from './pages/temp';
 
+import axios from 'axios';
+
 const Stack = createStackNavigator();
+global.unitSystem = 'Metric';
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="login">
+      <Stack.Navigator initialRouteName="tempPage">
         <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="Profile" component={Register} />
         <Stack.Screen name="chooseBox" component = {chooseBox} />
