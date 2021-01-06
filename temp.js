@@ -10,9 +10,10 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import {LineChart } from "react-native-chart-kit";
 import 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
+import moment from 'moment';
 
 
-//moment(variavel, "YYYY-MM-DD hh:mm:ss");
+//moment(variavel).format("YYYY-MM-DD hh:mm:ss");
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -23,6 +24,10 @@ export default function tempPage () {
     const [modeFinal, setModeFinal] = useState('date');
     const [show, setShow] = useState(false);
     const [showFinal, setShowFinal] = useState(false);
+    const [dataInicial, setDataInicial] = useState();//data inicial para usar no fetch
+    const [dataFinal, setDataFinal] = useState();//data final para usar no fetch
+   // console.log("data final" ,dataFinal);
+    //console.log("data inicial" ,dataInicial);
     
     const chartConfig = {
         backgroundGradientFrom: "white",
@@ -59,12 +64,17 @@ export default function tempPage () {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        setDataInicial(moment(selectedDate).format("YYYY-MM-DD hh:mm:ss"));
+        //console.log("data inicial" ,dataInicial);
     
       };
       const onChangeFinal = (event, selectedDate) => {
         const currentDate = selectedDate || dateFinal;
         setShowFinal(Platform.OS === 'ios');
         setDateFinal(currentDate);
+        setDataFinal(moment(selectedDate).format("YYYY-MM-DD hh:mm:ss"));
+        //console.log("data final" ,dataFinal);
+
       
       };
       const showDatepicker = () => {
@@ -78,9 +88,10 @@ export default function tempPage () {
     const [isLoading, setLoading] = useState(true);
     const [min, setMin] = useState([]);
     const [max, setMax] = useState([]);
+    const [avg, setAvg] = useState([]);
 
     useEffect(() => {
-     
+      
       if(global.unitSystem == 'Metric') {
         fetch('http://smartsensorbox.ddns.net:5000/measurements/min')
         .then((response) => response.json())
@@ -88,7 +99,7 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
         
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/max')
+       fetch('http://smartsensorbox.ddns.net:5000/measurements/max')
         .then((response) => response.json())
         .then((json) => setMax(json.measurement[0]))
         .catch((error) => console.error(error))
@@ -108,27 +119,53 @@ export default function tempPage () {
         .then((json) => setMax(json.measurement[0]))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
-          
-      } 
 
-  });
-     
+      }
+       
+          
+       
+
+  },[]);
+
+  const _databaseDatas=() => {
+
+    if (dataInicial && dataFinal ){
+      
+      if(global.unitSystem == 'Metric') {
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvg(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+      }
+      else{
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/average/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvg(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+      }
+   
+    }
+    
+  }
+  
     return(
       
       <View style={styles.container}>
         <LogoSmall/>
         <ScrollView>
           
-          {/*<View style={styles.container_values}>
+          <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title} > Day average: </Text>
-                  <ValueBox />
+                  <ValueBox value={avg.temperature}/>
               </View>
-              <View style={styles.iconPlusValue}>
+             <View style={styles.iconPlusValue}>
                   <Text style={styles.title}>Night average: </Text>
                   <ValueBox />
-              </View>
-          </View>*/}
+                  </View>
+          </View>
           
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
@@ -149,15 +186,25 @@ export default function tempPage () {
           <View>
             <View style={styles.container_dates}>
             
-              <ButtonBlue text='Data Inicial'onPress={showDatepicker}/>
+              <ButtonBlue text='Data Inicial' onPress={showDatepicker}/>
               <ButtonBlue text='Data Final'onPress={showDatepickerFinal}/>
                 
+            </View>
+
+            <View style={styles.container_dates}>
+            
+            <Text> {dataInicial} </Text>
+            <Text> {dataFinal} </Text>
+                
+            </View>
+            <View style={styles.submit}>
+              <ButtonBlue text='Submit'onPress={_databaseDatas}/>
             </View>
         
             {show && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={date} /* a data está aqui guadada mas nao percebo o formato*/
+              value={date} /* a data está aqui guadada */
               mode={mode}
               is24Hour={true}
               display="default"
@@ -167,7 +214,7 @@ export default function tempPage () {
             {showFinal && (
             <DateTimePicker
               testID="dateTimePicker"
-              value={dateFinal} /* a data está aqui guadada mas nao percebo o formato*/
+              value={dateFinal} /* a data está aqui guadada o*/
               mode={modeFinal}
               is24Hour={true}
               display="default"
@@ -213,7 +260,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontFamily: "Montserrat"     
       },
-      container_dates: {
+    container_dates: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'space-evenly',
@@ -221,6 +268,15 @@ const styles = StyleSheet.create({
         maxHeight: 100,
         maxWidth: '100%'      
     },    
+    submit: {
+    
+      alignItems: 'center',
+      justifyContent: 'center',
+      
+      maxHeight: 100,
+      maxWidth: '100%'      
+  },  
+
 });
 
 
