@@ -1,11 +1,21 @@
 import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler';
 
 
-function settingsBox({text}) {
+const settingsBox = ({text, valueFromApi, onChangeText, editable}) => {
+
+
   return(
     <View style={styles.textContainer}>
-        <Text style={styles.text}> {text} </Text>
+        <TextInput
+           style={styles.text}
+           value={text}
+           placeholder={valueFromApi}
+           autoCorrect={false}
+           editable={editable}
+           onChangeText={onChangeText}/>
+           
     </View>
   );
 }
@@ -18,8 +28,6 @@ const styles = StyleSheet.create({
     height: 35,
     marginRight: '4%',
     alignSelf: 'flex-start',
-    /*left: 48,
-    top: 214,*/
     color: '#FFFFFF',
     borderWidth: 1.5,
     borderStyle: 'solid',
@@ -32,8 +40,9 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 14,
-    lineHeight: 28,
-    display: 'flex',
+    lineHeight: 10,
+    height: 35,
+    //display: 'flex',
     textAlign: 'left',
     color: '#000000'
   },
