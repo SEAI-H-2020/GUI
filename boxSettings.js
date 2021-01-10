@@ -23,9 +23,6 @@ export default function boxSettings ({navigation}) {
     let [shutdown, setShutdown] = useState();
     let [firmware, setFirmware] = useState();
 
-    let samplePeriod;
-    let aux;
-
     
     useEffect(() => {
         fetch('http://smartsensorbox.ddns.net:5000/usersettings/1')
@@ -48,9 +45,6 @@ export default function boxSettings ({navigation}) {
         shutdown = user.shutdown_on_wakeup;
         firmware = user.latest_firmware;
 
-        aux = sample;
-        samplePeriod = parseInt(aux);
-
         const data = {
             method: 'PUT',
             headers: { 
@@ -59,7 +53,7 @@ export default function boxSettings ({navigation}) {
             body: JSON.stringify(
                 {
                     "sync_period": sync,
-                    "sample_time": samplePeriod,
+                    "sample_time": sample,
                     "shutdown_on_wakeup": shutdown,
                     "username": ''+username+'',
                     "latest_firmware": firmware,
@@ -114,7 +108,7 @@ export default function boxSettings ({navigation}) {
                 <PeriodPicker
                     canEdit={editablePeriod}
                     samplePeriod={user.sample_time}
-                    onChangeItem={(item)=>setSample(item)}/>
+                    onChangeItem={(item)=>setSample(item.value)}/>
                 <TouchableOpacity onPress={_editPeriod}>
                     <Image
                         source={require('../images/edit.png')}
