@@ -10,12 +10,12 @@ function PeriodPicker({canEdit, samplePeriod, onChangeItem}) {
 
 
     const [items, setItems] = useState([ 
-        {label: "1 min", value: "1 min"},
-        {label: "5 min", value: "5 min"},
-        {label: "10 min", value: "10 min"},
-        {label: "15 min", value: "15 min"},
-        {label: "30 min", value: "30 min"},
-        {label: "1 h", value: "1 h"},
+        {label: "1 min", value: 1},
+        {label: "5 min", value: 5},
+        {label: "10 min", value: 10},
+        {label: "15 min", value: 15},
+        {label: "30 min", value: 30},
+        {label: "60 min", value: 60},
     ]);
     
     console.log('no period picker: '+canEdit);
