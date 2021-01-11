@@ -1,19 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput , Image} from 'react-native'
-import { CheckBox } from 'react-native-elements'
+import { StyleSheet, Text, View , Image} from 'react-native'
+//import { CheckBox } from 'react-native-elements'
 import ButtonBlueBig  from '../components/buttonBig';
 import LogoBig from '../components/logo'
 import ButtonBlue  from '../components/button';
 import FormInput from '../components/inputText'
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import EmailTextField from '../components/inputEmail'
+import { ScrollView } from 'react-native-gesture-handler';
 
  
 /**return <Text>This is {route.params.name}'s profile</Text>; botao para violtar para trás */
 
- const Register = ({ navigation, route }) => {
+ const Register = ({ navigation}) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,34 +45,29 @@ import EmailTextField from '../components/inputEmail'
   };
   return(
     <View style={styles.container}>
-    
       <LogoBig/>
+        {/*<ScrollView>*/}
 
-      <ButtonBlueBig text='Sign up with Google'/>
+      {/*<ButtonBlueBig text='Sign up with Google'/>*/}
 
       <Text style={styles.title}> User name: </Text>
 
       <FormInput
-           
-           onChangeText={(val)=> setUsername(val)} /** poe o valor na variavel newUsername */
-           
-
+        onChangeText={(val)=> setUsername(val)} /** poe o valor na variavel newUsername */
       />
 
       <Text style={styles.title}> Email address: </Text> 
 
       <EmailTextField 
-                term = {email} 
-               
-                onTermChange = {newEmail => setEmail(newEmail)}
+        term = {email} 
+        onTermChange = {newEmail => setEmail(newEmail)}
       />
 
-      <Text style={{fontSize:8}}>email:{email}</Text>
+      {/*<Text style={{fontSize:8}}>email:{email}</Text>*/}
 
       <Text style={styles.title}> Password: </Text>
 
       <FormInput
-           
            onChangeText={(val)=> setPassword(val)}
            secureTextEntry
            value = {password} 
@@ -84,7 +77,6 @@ import EmailTextField from '../components/inputEmail'
       <Text style={styles.title}> Confirm Password: </Text>
 
       <FormInput
-           
            onChangeText={(val)=> setConfirmPassword(val)}
            secureTextEntry
            confirmvalue = {confirmPassword} 
@@ -92,15 +84,10 @@ import EmailTextField from '../components/inputEmail'
       />
             
       <ButtonBlue text='Confirm'  onPress={_registo}/>
+    
       </View>
-);
-    
-
-
-
-
-    
-  }
+    );
+    }
 
   export default Register;
 
@@ -108,13 +95,13 @@ import EmailTextField from '../components/inputEmail'
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      
+      backgroundColor: '#ffffff',
       alignItems: 'center',
       
     },
     title:{
       fontWeight:"bold",
-      fontSize:20,
+      fontSize:18,
       color: 'black',
       fontFamily: "Montserrat",
       alignSelf: 'flex-start',
