@@ -13,6 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 
 
+
 //moment(variavel).format("YYYY-MM-DD hh:mm:ss");
 
 const screenWidth = Dimensions.get("window").width;
@@ -26,9 +27,19 @@ export default function tempPage () {
     const [showFinal, setShowFinal] = useState(false);
     const [dataInicial, setDataInicial] = useState();//data inicial para usar no fetch
     const [dataFinal, setDataFinal] = useState();//data final para usar no fetch
-   // console.log("data final" ,dataFinal);
-    //console.log("data inicial" ,dataInicial);
+    const [isLoading, setLoading] = useState(true);
+    const [min, setMin] = useState([]);
+    const [max, setMax] = useState([]);
+    const [avgDay, setAvgDay] = useState([]);
+    const [avgNight, setAvgNight] = useState([]); 
+    const [values, setValues] = useState([]);
+    const [dataInicialPrint, setDataInicialPrint] = useState();//data inicial para fazer print
+    const [dataFinalPrint, setDataFinalPrint] = useState();//data final para para fazer print
+
+   
     
+    
+
     const chartConfig = {
         backgroundGradientFrom: "white",
         backgroundGradientFromOpacity: 0,
@@ -39,17 +50,19 @@ export default function tempPage () {
         barPercentage: 0.5,
         useShadowColorFromDataset: false // optional
       };
-    const data = {
-        labels: ["January", "February", "March", "April", "May", "June"],
+      const data = {
+        labels: global.datas,
         datasets: [
-          {
-            data: [20, 45, 28, 80, 99, 43],
-            color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // optional
-            strokeWidth: 2 // optional
+          { 
+            data: global.valores,
+            color: (opacity = 1) => `rgba(8, 70, 141, ${opacity})`, // optional
+            strokeWidth: 3 // optional
           }
         ],
         legend: ["Temperature"] // optional
       };
+
+    
 
       const showMode = (currentMode) => {
         setShow(true);
@@ -64,7 +77,8 @@ export default function tempPage () {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
-        setDataInicial(moment(selectedDate).format("YYYY-MM-DD hh:mm:ss"));
+        setDataInicial(moment(selectedDate).format("YYYY-MM-DD 00:00:00"));
+        setDataInicialPrint(moment(selectedDate).format("YYYY-MM-DD"));
         //console.log("data inicial" ,dataInicial);
     
       };
@@ -72,7 +86,8 @@ export default function tempPage () {
         const currentDate = selectedDate || dateFinal;
         setShowFinal(Platform.OS === 'ios');
         setDateFinal(currentDate);
-        setDataFinal(moment(selectedDate).format("YYYY-MM-DD hh:mm:ss"));
+        setDataFinal(moment(selectedDate).format("YYYY-MM-DD 23:59:00"));
+        setDataFinalPrint(moment(selectedDate).format("YYYY-MM-DD"));
         //console.log("data final" ,dataFinal);
 
       
@@ -85,10 +100,8 @@ export default function tempPage () {
         showModeFinal('date');
       };
 
-    const [isLoading, setLoading] = useState(true);
-    const [min, setMin] = useState([]);
-    const [max, setMax] = useState([]);
-    const [avg, setAvg] = useState([]);
+ 
+ 
 
     useEffect(() => {
       
@@ -131,21 +144,133 @@ export default function tempPage () {
 
     if (dataInicial && dataFinal ){
       
+      
       if(global.unitSystem == 'Metric') {
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/'+dataInicial+'/'+dataFinal)
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
-        .then((json) => setAvg(json.measurement[0]))
+        .then((json) => setAvgDay(json.measurement[0]))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
-      }
-      else{
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/average/'+dataInicial+'/'+dataFinal)
+
+
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
-        .then((json) => setAvg(json.measurement[0]))
+        .then((json) => setAvgNight(json.measurement[1]))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
+
+        
+       
+       
+        
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/temperature/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setValues(json.measurement))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+       
+        console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
+        
+        if(avgDay.temperature_day==null || avgNight.temperature_night == null ){
+          alert("Não há valores válidos para as datas indicadas");
+        }
+
+        for (let i = 0; i < values.length; i++) {
+          let aux =Math.ceil(values.length/50); /**O vetor global.datas[i] fica com 50 posicoes*/
+          aux=aux*i;
+          if (aux>=values.length) { /** '>=' Porque na posição values.length nao existe nada */
+            break;
+          }
+          console.log(aux)
+          global.valores[i]=values[aux].temperature;
+         //console.log(i)
+         //console.log(values[aux].tstamp)
+          
+        }
+     
+        for (let i = 0; i < values.length; i++) {
+          let aux =Math.ceil(values.length/5); /**O vetor global.datas[i] fica com 5 posicoes*/
+          aux=aux*i;
+          
+          if (aux>=values.length) {
+            
+           /* global.datas[i]= moment(values[values.length-1].tstamp).format("ll");*/
+            break;
+          }
+          console.log("aux",aux);
+          global.datas[i]= moment(values[aux].tstamp).format("ll");
+      
+          
+        }
+      
+       
       }
-   
+        
+      
+    
+      else{ /**Se NÃO for global.unitSystem == 'Metric'  */
+      
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvgDay(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvgNight(json.measurement[1]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+        
+       
+       
+        
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/temperature/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setValues(json.measurement))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+       
+        console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
+        
+        if(avgDay.temperature_day==null || avgNight.temperature_night == null ){ 
+          alert("Não há valores válidos para as datas indicadas"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
+        }
+
+        for (let i = 0; i < values.length; i++) {
+          let aux =Math.ceil(values.length/50); /**O vetor global.datas[i] fica com 50 posicoes*/
+          aux=aux*i;
+          if (aux>=values.length) { /** '>=' Porque na posição values.length nao existe nada */
+            break;
+          }
+          console.log(aux)
+          global.valores[i]=values[aux].temperature;
+         //console.log(i)
+         //console.log(values[aux].tstamp)
+          
+        }
+     
+        for (let i = 0; i < values.length; i++) {
+          let aux =Math.ceil(values.length/5); /**O vetor global.datas[i] fica com 5 posicoes*/
+          aux=aux*i;
+          
+          if (aux>=values.length) {
+            
+           /* global.datas[i]= moment(values[values.length-1].tstamp).format("ll");*/
+            break;
+          }
+          console.log("aux",aux);
+          global.datas[i]= moment(values[aux].tstamp).format("ll");
+          
+          
+        }
+      
+     
+      }
     }
     
   }
@@ -153,50 +278,57 @@ export default function tempPage () {
     return(
       
       <View style={styles.container}>
+
         <LogoSmall/>
-        <ScrollView>
+      <ScrollView>
           
-          <View style={styles.container_values}>
-              <View style={styles.iconPlusValue}>
-                  <Text style={styles.title} > Day average: </Text>
-                  <ValueBox value={avg.temperature}/>
-              </View>
-             <View style={styles.iconPlusValue}>
-                  <Text style={styles.title}>Night average: </Text>
-                  <ValueBox />
-                  </View>
-          </View>
+          
           
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={min.temperature}/>
+                  <ValueBox value={max.temperature}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={max.temperature}/>
+                  <ValueBox value={min.temperature}/>
               </View>
           </View>
 
+
           <LineChart 
+            
             data={data}  
             width={screenWidth}  height={200}  
-            chartConfig={chartConfig}/>
+          chartConfig={chartConfig}
+          />
+
+          <View style={styles.container_values}>
+              <View style={styles.iconPlusValue}>
+                  <Text style={styles.title} > Day average: </Text>
+                  <ValueBox value={avgDay.temperature_day}/>
+              </View>
+             <View style={styles.iconPlusValue}>
+                  <Text style={styles.title}>Night average: </Text>
+                  <ValueBox value={avgNight.temperature_night}/>
+                  </View>
+          </View>
+         
           
           <View>
             <View style={styles.container_dates}>
-            
-              <ButtonBlue text='Data Inicial' onPress={showDatepicker}/>
-              <ButtonBlue text='Data Final'onPress={showDatepickerFinal}/>
-                
+              <View style={styles.column}>
+                <ButtonBlue text='Initial Date' onPress={showDatepicker}/>
+                <Text> {dataInicialPrint} </Text>
+              </View>
+              <View style={styles.column}>
+                <ButtonBlue text='Final Date'onPress={showDatepickerFinal}/>
+                <Text> {dataFinalPrint} </Text>
+              </View>
             </View>
 
-            <View style={styles.container_dates}>
-            
-            <Text> {dataInicial} </Text>
-            <Text> {dataFinal} </Text>
-                
-            </View>
+          
+
             <View style={styles.submit}>
               <ButtonBlue text='Submit'onPress={_databaseDatas}/>
             </View>
@@ -222,7 +354,7 @@ export default function tempPage () {
             />
             )}
           </View>
-        </ScrollView>           
+        </ScrollView>         
        <Navbar/>
       </View>
     
@@ -245,7 +377,12 @@ const styles = StyleSheet.create({
         maxHeight: 150,
         marginLeft:'4%',
         marginRight: '4%',
+        marginBottom: 20,
            
+    },
+    column: {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
     iconPlusValue: {
         flex: 2,
@@ -266,7 +403,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         flexDirection: 'row',
         maxHeight: 100,
-        maxWidth: '100%'      
+        maxWidth: '100%' ,
+            
     },    
     submit: {
     
