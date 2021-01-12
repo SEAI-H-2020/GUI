@@ -14,15 +14,18 @@ import boxSettings from './pages/boxSettings';
 import userSettings from './pages/userSettings';
 import tempPage from './pages/temp';
 
-import axios from 'axios';
+
 
 const Stack = createStackNavigator();
 global.unitSystem = 'Metric';
+global.valores = [];
+global.valores[0]=15;
+global.datas = [];
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="tempPage">
+      <Stack.Navigator initialRouteName="login">
         <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="Profile" component={Register} />
         <Stack.Screen name="chooseBox" component = {chooseBox} />
