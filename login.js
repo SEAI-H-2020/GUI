@@ -9,7 +9,6 @@ import ButtonBlue from '../components/button';
 import LogoBig from '../components/logo';
 
 
-import { ScrollView } from 'react-native-gesture-handler';
 
 
 
