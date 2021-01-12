@@ -7,8 +7,9 @@ import { StyleSheet, Text, View, TextInput, } from 'react-native';
 //import { CheckBox } from 'react-native-elements';
 import ButtonBlue from '../components/button';
 import LogoBig from '../components/logo';
-import Interface from './apiTest';
-import AsyncStorage from '@react-native-community/async-storage';
+
+
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -23,35 +24,51 @@ const Login = ({ navigation }) =>  {
   const [response, setResponse] = useState('');  
   
 
-  
+  useEffect(() => {
+      
+    if(username && password){
+      fetch('http://smartsensorbox.ddns.net:5000/users/'+username+'/'+password)
+      .then((response) => response.json())
+      .then((json) => setResponse(json.result))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
+      console.log(response);
+
+    } 
+        
+     
+
+},[username,password]);
   
 
 
 const _login=() => {
-  fetch('http://smartsensorbox.ddns.net:5000/users/'+username+'/'+password)
-    .then((response) => response.json())
-    .then((json) => setResponse(json.result))
-    .catch((error) => console.error(error))
-    .finally(() => setLoading(false));
-    console.log(response);
-    if(response=='Correct username and password!'){
-      // alert('logged in');
-       setRequest('false');
-       navigation.navigate('chooseBox');
-   
-     } else if(response=='Incorrect password!'){
-         alert(' password is incorrrect');
-         setRequest('false');
-     }
-     else if(response=='Check the username.'){
-       alert('Username is incorrrect');
-       setRequest('false');
-     }
+  if(username && password){
+    
+    if(response!=null){
+      if(response=='Correct username and password!'){
+        // alert('logged in');
+        setRequest('false');
+        navigation.navigate('chooseBox');
+    
+      } else if(response=='Incorrect password!'){
+          alert('Password is incorrrect!');
+          setRequest('false');
+      }
+      else if(response=='Check the username.'){
+        alert('Username is incorrrect!');
+        setRequest('false');
+      }
+    }
+  }
+  else{
+    alert('Enter Username and Password!');
+  }
 };
 
   return (
     <View style={styles.container}>
-    
+   
     <LogoBig/>
       
      
@@ -83,7 +100,7 @@ const _login=() => {
           />
       </View>
     
-       {Interface()}
+    
 
        <ButtonBlue 
                   text='Confirm'
@@ -92,7 +109,7 @@ const _login=() => {
                   //onPress={() => navigation.navigate('mainPage')}
                   />
         <ButtonBlue text='Register' onPress={() => navigation.navigate('Profile', { name: 'Jane' })} />
-    
+        
     </View>
       );
     
