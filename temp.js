@@ -32,7 +32,10 @@ export default function tempPage () {
     const [max, setMax] = useState([]);
     const [avgDay, setAvgDay] = useState([]);
     const [avgNight, setAvgNight] = useState([]); 
+    const [avgDayPrint, setAvgDayPrint] = useState([]);
+    const [avgNightPrint, setAvgNightPrint] = useState([]); 
     const [values, setValues] = useState([]);
+  
     const [dataInicialPrint, setDataInicialPrint] = useState();//data inicial para fazer print
     const [dataFinalPrint, setDataFinalPrint] = useState();//data final para para fazer print
 
@@ -140,12 +143,12 @@ export default function tempPage () {
 
   },[]);
 
-  const _databaseDatas=() => {
-
+  useEffect(() => {
+      
     if (dataInicial && dataFinal ){
-      
-      
-      if(global.unitSystem == 'Metric') {
+
+
+      if(global.unitSystem == 'Metrics') {
         fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setAvgDay(json.measurement[0]))
@@ -159,21 +162,54 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-        
-       
-       
-        
         fetch('http://smartsensorbox.ddns.net:5000/measurements/temperature/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setValues(json.measurement))
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
+      }
 
+      else{ /**Se NÃO for global.unitSystem == 'Metric'  */
+      
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/average/daynight/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvgDay(json.measurement[0]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/average/daynight/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setAvgNight(json.measurement[1]))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/temperature/'+dataInicial+'/'+dataFinal)
+        .then((response) => response.json())
+        .then((json) => setValues(json.measurement))
+        .catch((error) => console.error(error))
+        .finally(() => setLoading(false));
+      }
+    }
+
+},[dataInicial,dataFinal]);
+  
+
+  const _databaseDatas=() => {
+
+    if (dataInicial && dataFinal ){
+      
+      
+      if(global.unitSystem == 'Metric') {
        
+
+        setAvgDayPrint( avgDay.temperature_day);
+        setAvgNightPrint(avgNight.temperature_night);
+          
         console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
         
         if(avgDay.temperature_day==null || avgNight.temperature_night == null ){
-          alert("Não há valores válidos para as datas indicadas");
+          alert("Invalid dates!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
         }
 
         for (let i = 0; i < values.length; i++) {
@@ -209,36 +245,18 @@ export default function tempPage () {
         
       
     
-      else{ /**Se NÃO for global.unitSystem == 'Metric'  */
-      
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
-        .then((response) => response.json())
-        .then((json) => setAvgDay(json.measurement[0]))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
-
-
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
-        .then((response) => response.json())
-        .then((json) => setAvgNight(json.measurement[1]))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
-
+      else{ /**Se NÃO for global.unitSystem == 'Metric'  */      
+       
+      setAvgDayPrint( avgDay.temperature_day);
+      setAvgNightPrint(avgNight.temperature_night);
         
        
-       
-        
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/temperature/'+dataInicial+'/'+dataFinal)
-        .then((response) => response.json())
-        .then((json) => setValues(json.measurement))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false));
 
        
         console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
         
         if(avgDay.temperature_day==null || avgNight.temperature_night == null ){ 
-          alert("Não há valores válidos para as datas indicadas"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
+          alert("Invalid dates!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
         }
 
         for (let i = 0; i < values.length; i++) {
@@ -272,6 +290,18 @@ export default function tempPage () {
      
       }
     }
+    else if(dataInicial && dataFinal==null) {
+      alert("Introduce final date please!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
+
+    }
+    else if(dataInicial==null && dataFinal) {
+      alert("Introduce initial date please!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
+
+    }
+    else {
+      alert("Introduce initial and final dates please!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
+
+    }
     
   }
   
@@ -280,7 +310,7 @@ export default function tempPage () {
       <View style={styles.container}>
 
         <LogoSmall/>
-      <ScrollView>
+      <ScrollView style={{marginBottom:80}}>
           
           
           
@@ -306,11 +336,11 @@ export default function tempPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title} > Day average: </Text>
-                  <ValueBox value={avgDay.temperature_day}/>
+                  <ValueBox value={avgDayPrint}/>
               </View>
              <View style={styles.iconPlusValue}>
                   <Text style={styles.title}>Night average: </Text>
-                  <ValueBox value={avgNight.temperature_night}/>
+                  <ValueBox value={avgNightPrint}/>
                   </View>
           </View>
          
