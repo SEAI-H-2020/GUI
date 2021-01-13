@@ -148,7 +148,7 @@ export default function tempPage () {
     if (dataInicial && dataFinal ){
 
 
-      if(global.unitSystem == 'Metrics') {
+      if(global.unitSystem == 'Metric') {
         fetch('http://smartsensorbox.ddns.net:5000/measurements/average/daynight/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setAvgDay(json.measurement[0]))
