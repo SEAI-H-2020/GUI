@@ -2,10 +2,10 @@ import React from 'react'
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
 
 
-export default function valueBox ({text}) {
+export default function valueBox ({value}) {
   return(
     <View style={styles.textContainer}>
-        <Text style={styles.text}>{ text }</Text>
+        <Text style={styles.text}>{ value }</Text>
     </View>
   );
 }
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 28,
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
