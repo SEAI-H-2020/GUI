@@ -1,20 +1,18 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
-import {View, TouchableOpacity, StyleSheet, Image, ActivityIndicator, FlatList, Text} from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import {View, TouchableOpacity, StyleSheet, Image, Linking} from 'react-native';
 import ButtonBlue  from '../components/button';
 import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
 import ValueBox from '../components/valueBox';
-//import userSettings from '/userSettings';
+
 
 
 const main = ({navigation}) => {
 
-    //const {navigation} = props;
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
-
-   
+ 
     useEffect(() => {
 
         if(global.unitSystem == 'Metric') {
@@ -33,6 +31,22 @@ const main = ({navigation}) => {
         } 
 
     });
+
+    const url = "http://smartsensorbox.ddns.net:5000/csv"; 
+    //console.log('entrou')
+
+    const handlePress = useCallback(async () => {
+        // Checking if the link is supported for links with custom URL scheme.
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
+        } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
+        }
+        }, [url]);
     
 
     return (
@@ -57,41 +71,35 @@ const main = ({navigation}) => {
                     style={{width: 100, height: 99, marginBottom: '1%'}}
                     source={require('../images/humidity.png')}
                 />
-                </TouchableOpacity>
                 <ValueBox value={data.humidity}/>
+            </TouchableOpacity>
             </View>
         </View>
         
         <View style={styles.sensorsContainer}>
             <View style={styles.iconPlusValue}>
-            <TouchableOpacity onPress={() => navigation.navigate('noisePage')}>
-                <Image 
-                    style={{width: 90, height: 82, marginBottom: '1%'}}
-                    source={require('../images/noise.png')}
-                />
+                <TouchableOpacity onPress={() => navigation.navigate('noisePage')}> 
+                    <Image 
+                        style={{width: 90, height: 82, marginBottom: '1%'}}
+                        source={require('../images/noise.png')}
+                    />
+                    <ValueBox value={data.noise_level}/>
                 </TouchableOpacity>
-                <ValueBox value={data.noise_level}/>
             </View>
             <View style={styles.iconPlusValue}>
-            <TouchableOpacity onPress={() => navigation.navigate('windPage')}>
-                <Image 
-                    style={{width: 100, height: 82, marginBottom: '1%'}}
-                    source={require('../images/wind.png')}
-                />
+                <TouchableOpacity onPress={() => navigation.navigate('windPage')}> 
+                    <Image 
+                        style={{width: 100, height: 82, marginBottom: '1%'}}
+                        source={require('../images/wind.png')}
+                    />
+                    <ValueBox value={data.wind}/>
                 </TouchableOpacity>
-                <ValueBox value={data.wind}/>
             </View>
         </View>
-
+        
         <ButtonBlue
-            text = 'Go back in time'
-            onPress = {() => navigation.navigate('mainPage')}>
-        </ButtonBlue>
-
-        <ButtonBlue
-            text = 'Export Data'
-            onPress = {() => navigation.navigate('chooseBox')}>
-        </ButtonBlue>
+                text='Export Data'
+                onPress={handlePress}/>
 
         <Navbar/>
 
@@ -126,3 +134,4 @@ const main = ({navigation}) => {
         },
 
     });
+
