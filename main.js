@@ -14,24 +14,7 @@ const main = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
-    for (let i = 0; i < global.valores.length; i++) {       
-        global.valores[i]=0;
-        
-               
-       }
-    for (let i = 0; i < global.valoresHum.length; i++) {       
-        global.valoresHum[i]=0;
-               
-       }
-    for (let i = 0; i < global.valoresNoise.length; i++) {       
-        global.valoresNoise[i]=0;
-               
-       }
-
-    for (let i = 0; i < global.valoresWind.length; i++) {       
-        global.valoresWind[i]=0;
-               
-       }
+   
     useEffect(() => {
 
         if(global.unitSystem == 'Metric') {
