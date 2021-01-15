@@ -18,7 +18,7 @@ import moment from 'moment';
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function tempPage () {
+export default function windPage () {
     const [date, setDate] = useState(new Date(1598051730000));
     const [dateFinal, setDateFinal] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
@@ -35,7 +35,6 @@ export default function tempPage () {
     const [avgDayPrint, setAvgDayPrint] = useState([]);
     const [avgNightPrint, setAvgNightPrint] = useState([]); 
     const [values, setValues] = useState([]);
-    const [dataInicialIf, setDataInicialIf] = useState();//data inicial para usar no if que permite mudar formato da label
     let dataInicialIf2 ;//data inicial para usar no if que permite mudar formato da label
 
     const [dataInicialPrint, setDataInicialPrint] = useState();//data inicial para fazer print
@@ -56,15 +55,15 @@ export default function tempPage () {
         useShadowColorFromDataset: false // optional
       };
       const data = {
-        labels: global.datas,
+        labels: global.datasWind,
         datasets: [
           { 
-            data: global.valores,
+            data: global.valoresWind,
             color: (opacity = 1) => `rgba(8, 70, 141, ${opacity})`, // optional
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Temperature"] // optional
+        legend: ["Wind"] // optional
       };
 
     
@@ -167,7 +166,7 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/temperature/'+dataInicial+'/'+dataFinal)
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/wind/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setValues(json.measurement))
         .catch((error) => console.error(error))
@@ -189,7 +188,7 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/temperature/'+dataInicial+'/'+dataFinal)
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/wind/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setValues(json.measurement))
         .catch((error) => console.error(error))
@@ -207,23 +206,23 @@ export default function tempPage () {
         console.log(dataInicialIf2);
         console.log(dataFinalPrint);
 
-        setAvgDayPrint( avgDay.temperature_day);
-        setAvgNightPrint(avgNight.temperature_night);
+        setAvgDayPrint( avgDay.wind_day);
+        setAvgNightPrint(avgNight.wind_night);
           
         console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
         
-        if(avgDay.temperature_day==null || avgNight.temperature_night == null ){
+        if(avgDay.wind_day==null || avgNight.wind_night == null ){
           alert("Invalid dates!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
         }
 
         for (let i = 0; i < values.length; i++) {
-          let aux =Math.ceil(values.length/50); /**O vetor global.datas[i] fica com 50 posicoes*/
+          let aux =Math.ceil(values.length/50); /**O vetor global.dtas[i] fica com 50 posicoes*/
           aux=aux*i;
           if (aux>=values.length) { /** '>=' Porque na posição values.length nao existe nada */
             break;
           }
           //console.log(aux)
-          global.valores[i]=values[aux].temperature;
+          global.valoresWind[i]=values[aux].wind;
          //console.log(i)
          //console.log(values[aux].tstamp)
           
@@ -232,30 +231,30 @@ export default function tempPage () {
         
      if(dataInicialIf2==dataFinalPrint||dataInicialPrint==dataFinalPrint){
       for (let i = 0; i < values.length; i++) {
-        let aux =Math.ceil(values.length/5); /**O vetor global.datas[i] fica com 5 posicoes*/
+        let aux =Math.ceil(values.length/5); /**O vetor global.dtas[i] fica com 5 posicoes*/
         aux=aux*i;
         
         if (aux>=values.length) {
           
-         /* global.datas[i]= moment(values[values.length-1].tstamp).format("ll");*/
+         /* global.dats[i]= moment(values[values.length-1].tstamp).format("ll");*/
           break;
         }
        // console.log("aux",aux);
-        global.datas[i]= moment(values[aux].tstamp).format("LT");
+        global.datasWind[i]= moment(values[aux].tstamp).format("LT");
       }
      }
      else{
         for (let i = 0; i < values.length; i++) {
-          let aux =Math.ceil(values.length/5); /**O vetor global.datas[i] fica com 5 posicoes*/
+          let aux =Math.ceil(values.length/5); /**O vetor global.dats[i] fica com 5 posicoes*/
           aux=aux*i;
           
           if (aux>=values.length) {
             
-           /* global.datas[i]= moment(values[values.length-1].tstamp).format("ll");*/
+           /* global.dats[i]= moment(values[values.length-1].tstamp).format("ll");*/
             break;
           }
          // console.log("aux",aux);
-          global.datas[i]= moment(values[aux].tstamp).format("ll");
+          global.datasWind[i]= moment(values[aux].tstamp).format("ll");
         }
           
     }
@@ -294,11 +293,11 @@ export default function tempPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.temperature}/>
+                  <ValueBox value={max.wind}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.temperature}/>
+                  <ValueBox value={min.wind}/>
               </View>
           </View>
 

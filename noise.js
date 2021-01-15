@@ -18,7 +18,7 @@ import moment from 'moment';
 
 const screenWidth = Dimensions.get("window").width;
 
-export default function tempPage () {
+export default function noisePage () {
     const [date, setDate] = useState(new Date(1598051730000));
     const [dateFinal, setDateFinal] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
@@ -56,15 +56,15 @@ export default function tempPage () {
         useShadowColorFromDataset: false // optional
       };
       const data = {
-        labels: global.datas,
+        labels: global.datasNoise,
         datasets: [
           { 
-            data: global.valores,
+            data: global.valoresNoise,
             color: (opacity = 1) => `rgba(8, 70, 141, ${opacity})`, // optional
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Temperature"] // optional
+        legend: ["Noise level"] // optional
       };
 
     
@@ -167,7 +167,7 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/temperature/'+dataInicial+'/'+dataFinal)
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/noise_level/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setValues(json.measurement))
         .catch((error) => console.error(error))
@@ -189,7 +189,7 @@ export default function tempPage () {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/temperature/'+dataInicial+'/'+dataFinal)
+        fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/noise_level/'+dataInicial+'/'+dataFinal)
         .then((response) => response.json())
         .then((json) => setValues(json.measurement))
         .catch((error) => console.error(error))
@@ -207,12 +207,12 @@ export default function tempPage () {
         console.log(dataInicialIf2);
         console.log(dataFinalPrint);
 
-        setAvgDayPrint( avgDay.temperature_day);
-        setAvgNightPrint(avgNight.temperature_night);
+        setAvgDayPrint( avgDay.noise_level_day);
+        setAvgNightPrint(avgNight.noise_level_night);
           
         console.log("tamanho do vetor",values.length); /**tamanho do vetor values */
         
-        if(avgDay.temperature_day==null || avgNight.temperature_night == null ){
+        if(avgDay.noise_level_day==null || avgNight.noise_level_night == null ){
           alert("Invalid dates!"); /**Pode-se tirar, o stress disto é que na 1a vez que se carrega aparece sempre */
         }
 
@@ -223,7 +223,7 @@ export default function tempPage () {
             break;
           }
           //console.log(aux)
-          global.valores[i]=values[aux].temperature;
+          global.valoresNoise[i]=values[aux].noise_level;
          //console.log(i)
          //console.log(values[aux].tstamp)
           
@@ -241,7 +241,7 @@ export default function tempPage () {
           break;
         }
        // console.log("aux",aux);
-        global.datas[i]= moment(values[aux].tstamp).format("LT");
+        global.datasNoise[i]= moment(values[aux].tstamp).format("LT");
       }
      }
      else{
@@ -255,7 +255,7 @@ export default function tempPage () {
             break;
           }
          // console.log("aux",aux);
-          global.datas[i]= moment(values[aux].tstamp).format("ll");
+          global.datasNoise[i]= moment(values[aux].tstamp).format("ll");
         }
           
     }
@@ -294,11 +294,11 @@ export default function tempPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.temperature}/>
+                  <ValueBox value={max.noise_level}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.temperature}/>
+                  <ValueBox value={min.noise_level}/>
               </View>
           </View>
 
