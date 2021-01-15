@@ -14,6 +14,24 @@ const main = ({navigation}) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
 
+    for (let i = 0; i < global.valores.length; i++) {       
+        global.valores[i]=0;
+        
+               
+       }
+    for (let i = 0; i < global.valoresHum.length; i++) {       
+        global.valoresHum[i]=0;
+               
+       }
+    for (let i = 0; i < global.valoresNoise.length; i++) {       
+        global.valoresNoise[i]=0;
+               
+       }
+
+    for (let i = 0; i < global.valoresWind.length; i++) {       
+        global.valoresWind[i]=0;
+               
+       }
     useEffect(() => {
 
         if(global.unitSystem == 'Metric') {
@@ -51,27 +69,33 @@ const main = ({navigation}) => {
         </View>
 
         <View style={styles.iconPlusValue}>
+            <TouchableOpacity onPress={() => navigation.navigate('humPage')}>
                 <Image 
                     style={{width: 100, height: 99, marginBottom: '1%'}}
                     source={require('../images/humidity.png')}
                 />
+                </TouchableOpacity>
                 <ValueBox value={data.humidity}/>
             </View>
         </View>
         
         <View style={styles.sensorsContainer}>
             <View style={styles.iconPlusValue}>
+            <TouchableOpacity onPress={() => navigation.navigate('noisePage')}>
                 <Image 
                     style={{width: 90, height: 82, marginBottom: '1%'}}
                     source={require('../images/noise.png')}
                 />
+                </TouchableOpacity>
                 <ValueBox value={data.noise_level}/>
             </View>
             <View style={styles.iconPlusValue}>
+            <TouchableOpacity onPress={() => navigation.navigate('windPage')}>
                 <Image 
                     style={{width: 100, height: 82, marginBottom: '1%'}}
                     source={require('../images/wind.png')}
                 />
+                </TouchableOpacity>
                 <ValueBox value={data.wind}/>
             </View>
         </View>
