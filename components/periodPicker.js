@@ -1,6 +1,6 @@
 import React, {useState, setState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-//import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Feather';
 
 //global.samplePeriod = '1 min';
 
@@ -33,10 +33,11 @@ function PeriodPicker({canEdit, samplePeriod, onChangeItem}) {
                 marginRight: '4%',
                 alignSelf: 'center',
                 marginBottom: '2%',
-                /*borderWidth: 1.5,
-                borderStyle: 'solid',
-                borderColor: '#0C688F',
-                borderRadius: 5*/
+                /*borderTopWidth: 1.5,
+                borderTopStyle: 'solid',
+                borderTopColor: '#0C688F',
+                borderTopLeftRadius: 5, borderTopRightRadius: 5,
+    borderBottomLeftRadius: 5, borderBottomRightRadius: 5*/
             }}
         dropDownStyle={{
             backgroundColor: '#fafafa',
