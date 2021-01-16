@@ -36,7 +36,7 @@ export default function userSettings ({navigation}) {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-    }, [global.editable]);
+    }, []);
 
     const _editUser=() => {
         setEditableUser(true);
@@ -48,7 +48,7 @@ export default function userSettings ({navigation}) {
 
     const saveChanges=() => {
 
-        if (username == null) {
+        if (username == '') {
             username = user.username;
         }
         if (email == '') {
@@ -101,7 +101,7 @@ export default function userSettings ({navigation}) {
     return(
         <View style={styles.container}>
             <LogoSmall/>
-            <ScrollView>
+            <ScrollView style={{marginBottom:60}}>
            
             <Text style={styles.text}> Name: </Text>
             <View style={styles.setting}>
@@ -144,7 +144,8 @@ export default function userSettings ({navigation}) {
             <Text style={styles.text}> Boxes: </Text>
             <View style={styles.setting}>
                 <SettingsBox
-                    valueFromAppi='Smart Sensor Box 1'/>
+                    text={'Smart Sensor Box 1'}
+                    editable={false}/>
                 <TouchableOpacity>
                     <Image
                         source={require('../images/delete.png')}
@@ -152,10 +153,15 @@ export default function userSettings ({navigation}) {
                 </TouchableOpacity>
             </View>
 
-            <ButtonBlue 
-                text='Save'
-                onPress={saveChanges}>
-           </ButtonBlue>
+            <View style={{
+                    width:'50%', 
+                    alignItems: 'center',
+                    alignSelf: 'center'}}>
+                <ButtonBlue 
+                    text='Save'
+                    onPress={saveChanges}>
+            </ButtonBlue>
+           </View>
 
             <Image
                 source={require('../images/logout.png')}
@@ -172,15 +178,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        flexDirection: 'column',
         backgroundColor: '#ffffff'
     },
 
     setting: {
-        flex: 2,
+        height: 45,
         alignItems: 'flex-start',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginRight: '2%'
+        bottom: 1,
+        marginRight: '2%',
+        marginBottom: '1%',
+        marginVertical: '0.5%',
     },
 
     text: {
@@ -200,5 +210,3 @@ const styles = StyleSheet.create({
 
     
 })
-
-//"{\n \"sync_period\": 10, \n \"sample_time\": 5, \n \"shutdown_on_wakeup\": true, \n \"username\":"+username+", \n \"latest_firmware\": 0.2, \n \"email\":"+user.email+" \"}")

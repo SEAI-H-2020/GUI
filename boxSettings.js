@@ -31,7 +31,7 @@ export default function boxSettings ({navigation}) {
         .catch((error) => console.error(error))
         .finally(() => setLoading(false));
 
-    }, [global.editable]);
+    }, []);
 
     const _editPeriod=() => {
         setEditablePeriod(false);
@@ -62,9 +62,9 @@ export default function boxSettings ({navigation}) {
                 
         };
 
-        console.log('entrou no savechages')
+        /*console.log('entrou no savechages')
         console.log('o que está dentro do header: '+data.headers)
-        console.log('o que está dentro do data: '+data.body)
+        console.log('o que está dentro do data: '+data.body)*/
         fetch('http://smartsensorbox.ddns.net:5000/usersettings/1', data)
         .then((response) => response.text())
         .then((json) => setResponse(json))
@@ -94,7 +94,7 @@ export default function boxSettings ({navigation}) {
 
             <Text style={styles.text}> Instalation date: </Text>
             <View style={styles.setting}>
-                <SettingsBox/>
+                <SettingsBox valueFromApi={'10-01-2021'}/>
                 <TouchableOpacity>
                     <Image
                         source={require('../images/edit.png')}
@@ -117,7 +117,6 @@ export default function boxSettings ({navigation}) {
             </View>
 
            <ButtonBlue 
-                style={styles.button}
                 text='Save'
                 onPress={saveChanges}>
            </ButtonBlue>

@@ -6,16 +6,22 @@ import LogoSmall from '../components/logoSmall';
 import Navbar from '../components/navbar';
 import ValueBox from '../components/valueBox';
 
-
+let temp = 'ºC';
+let wind = 'm/s';
+const hum = '%';
+const noise = 'dB';
 
 const main = ({navigation}) => {
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+
  
     useEffect(() => {
 
         if(global.unitSystem == 'Metric') {
+            temp = 'ºC'
+            wind = 'm/s'
             fetch('http://smartsensorbox.ddns.net:5000/measurements/')
             .then((response) => response.json())
             .then((json) => setData(json.measurement[0]))
@@ -23,6 +29,8 @@ const main = ({navigation}) => {
             .finally(() => setLoading(false)); 
         }
         else  { 
+            temp = 'F'
+            wind = 'mi/h'
             fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial')
             .then((response) => response.json())
             .then((json) => setData(json.measurement[0]))
@@ -62,7 +70,7 @@ const main = ({navigation}) => {
                         source={require('../images/temp.png')}
                     />
                 </TouchableOpacity>
-                <ValueBox value={data.temperature}/> 
+                <ValueBox value={data.temperature+temp}/> 
         </View>
 
         <View style={styles.iconPlusValue}>
@@ -71,7 +79,7 @@ const main = ({navigation}) => {
                     style={{width: 100, height: 99, marginBottom: '1%'}}
                     source={require('../images/humidity.png')}
                 />
-                <ValueBox value={data.humidity}/>
+                <ValueBox value={data.humidity+hum}/>
             </TouchableOpacity>
             </View>
         </View>
@@ -83,7 +91,7 @@ const main = ({navigation}) => {
                         style={{width: 90, height: 82, marginBottom: '1%'}}
                         source={require('../images/noise.png')}
                     />
-                    <ValueBox value={data.noise_level}/>
+                    <ValueBox value={data.noise_level+noise}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.iconPlusValue}>
@@ -92,7 +100,7 @@ const main = ({navigation}) => {
                         style={{width: 100, height: 82, marginBottom: '1%'}}
                         source={require('../images/wind.png')}
                     />
-                    <ValueBox value={data.wind}/>
+                    <ValueBox value={data.wind+wind}/>
                 </TouchableOpacity>
             </View>
         </View>
