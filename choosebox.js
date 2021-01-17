@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import ButtonBox  from '../components/buttonBox';
 import ButtonBlue  from '../components/button';
 import LogoBig from '../components/logo';
-
+global.unitSystem = 'Metric';
 
 function chooseBox ({navigation}) {
     return (
@@ -35,8 +35,9 @@ export default chooseBox;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        color: '#ffffff',
+        backgroundColor: '#ffffff',
         alignItems: 'center'
+       
     },
 
     text:{

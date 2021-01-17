@@ -11,7 +11,7 @@ import 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 
-
+const hum = '%';
 
 //moment(variavel).format("YYYY-MM-DD hh:mm:ss");
 
@@ -63,7 +63,7 @@ export default function humPage () {
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Humidity"] // optional
+        legend: ["Humidity ("+hum+")"] // optional
       };
 
     
@@ -293,11 +293,11 @@ export default function humPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.humidity}/>
+                  <ValueBox value={max.humidity+hum}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.humidity}/>
+                  <ValueBox value={min.humidity+hum}/>
               </View>
           </View>
 
@@ -311,11 +311,11 @@ export default function humPage () {
 
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
-                  <Text style={styles.title} > Day average: </Text>
+                  <Text style={styles.title} >Day average ({hum})</Text>
                   <ValueBox value={avgDayPrint}/>
               </View>
              <View style={styles.iconPlusValue}>
-                  <Text style={styles.title}>Night average: </Text>
+                  <Text style={styles.title}>Night average ({hum})</Text>
                   <ValueBox value={avgNightPrint}/>
                   </View>
           </View>

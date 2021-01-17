@@ -12,6 +12,7 @@ import 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 
+let temp = '\u00b0C';
 
 
 //moment(variavel).format("YYYY-MM-DD hh:mm:ss");
@@ -41,7 +42,11 @@ export default function tempPage () {
     const [dataInicialPrint, setDataInicialPrint] = useState();//data inicial para fazer print
     const [dataFinalPrint, setDataFinalPrint] = useState();//data final para para fazer print
 
-   
+    if(global.unitSystem == 'Metric') {
+      temp = '\u00b0C';}
+      else{
+        temp = '\u00b0F';
+      }
     
     
 
@@ -64,7 +69,7 @@ export default function tempPage () {
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Temperature"] // optional
+        legend: ["Temperature ("+temp+")"] // optional
       };
 
     
@@ -114,6 +119,7 @@ export default function tempPage () {
     useEffect(() => {
       
       if(global.unitSystem == 'Metric') {
+        temp = '\u00b0C';
         fetch('http://smartsensorbox.ddns.net:5000/measurements/min')
         .then((response) => response.json())
         .then((json) => setMin(json.measurement[0]))
@@ -129,6 +135,7 @@ export default function tempPage () {
         }
 
       else { 
+        temp = '\u00b0F';
         fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/min')
         .then((response) => response.json())
         .then((json) => setMin(json.measurement[0]))
@@ -294,11 +301,11 @@ export default function tempPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.temperature}/>
+                  <ValueBox value={max.temperature+temp}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.temperature}/>
+                  <ValueBox value={min.temperature+temp}/>
               </View>
           </View>
 
@@ -312,11 +319,11 @@ export default function tempPage () {
 
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
-                  <Text style={styles.title} > Day average: </Text>
+                  <Text style={styles.title} >Day average ({temp})</Text>
                   <ValueBox value={avgDayPrint}/>
               </View>
              <View style={styles.iconPlusValue}>
-                  <Text style={styles.title}>Night average: </Text>
+                  <Text style={styles.title}>Night average ({temp})</Text>
                   <ValueBox value={avgNightPrint}/>
                   </View>
           </View>

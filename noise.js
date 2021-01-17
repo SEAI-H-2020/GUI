@@ -11,7 +11,7 @@ import {LineChart } from "react-native-chart-kit";
 import 'react-native-svg';
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
-
+const noise = 'dB';
 
 
 //moment(variavel).format("YYYY-MM-DD hh:mm:ss");
@@ -64,7 +64,7 @@ export default function noisePage () {
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Noise level"] // optional
+        legend: ["Noise level("+noise+")"] // optional
       };
 
     
@@ -294,11 +294,11 @@ export default function noisePage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.noise_level}/>
+                  <ValueBox value={max.noise_level+noise}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.noise_level}/>
+                  <ValueBox value={min.noise_level+noise}/>
               </View>
           </View>
 
@@ -312,11 +312,11 @@ export default function noisePage () {
 
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
-                  <Text style={styles.title} > Day average: </Text>
+                  <Text style={styles.title} > Day average ({noise}) </Text>
                   <ValueBox value={avgDayPrint}/>
               </View>
              <View style={styles.iconPlusValue}>
-                  <Text style={styles.title}>Night average: </Text>
+                  <Text style={styles.title}>Night average ({noise}) </Text>
                   <ValueBox value={avgNightPrint}/>
                   </View>
           </View>

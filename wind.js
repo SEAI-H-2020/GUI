@@ -13,7 +13,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 
 
-
+let wind = 'm/s';
 //moment(variavel).format("YYYY-MM-DD hh:mm:ss");
 
 const screenWidth = Dimensions.get("window").width;
@@ -40,8 +40,12 @@ export default function windPage () {
     const [dataInicialPrint, setDataInicialPrint] = useState();//data inicial para fazer print
     const [dataFinalPrint, setDataFinalPrint] = useState();//data final para para fazer print
 
-   
     
+    if(global.unitSystem == 'Metric') {
+      wind = 'm/s';}
+      else{
+        wind = 'mi/h';
+      }
     
 
     const chartConfig = {
@@ -63,7 +67,7 @@ export default function windPage () {
             strokeWidth: 3 // optional
           }
         ],
-        legend: ["Wind"] // optional
+        legend: ["Wind("+wind+")"] // optional
       };
 
     
@@ -113,6 +117,7 @@ export default function windPage () {
     useEffect(() => {
       
       if(global.unitSystem == 'Metric') {
+        wind = 'm/s';
         fetch('http://smartsensorbox.ddns.net:5000/measurements/min')
         .then((response) => response.json())
         .then((json) => setMin(json.measurement[0]))
@@ -128,6 +133,7 @@ export default function windPage () {
         }
 
       else { 
+        wind = 'mi/h';
         fetch('http://smartsensorbox.ddns.net:5000/measurements/imperial/min')
         .then((response) => response.json())
         .then((json) => setMin(json.measurement[0]))
@@ -293,11 +299,11 @@ export default function windPage () {
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Maximum: </Text>
-                  <ValueBox value={max.wind}/>
+                  <ValueBox value={max.wind+wind}/>
               </View>
               <View style={styles.iconPlusValue}>
                   <Text style={styles.title}> Minimum: </Text>
-                  <ValueBox value={min.wind}/>
+                  <ValueBox value={min.wind+wind}/>
               </View>
           </View>
 
@@ -311,11 +317,11 @@ export default function windPage () {
 
           <View style={styles.container_values}>
               <View style={styles.iconPlusValue}>
-                  <Text style={styles.title} > Day average: </Text>
+                  <Text style={styles.title} > Day average ({wind}) </Text>
                   <ValueBox value={avgDayPrint}/>
               </View>
              <View style={styles.iconPlusValue}>
-                  <Text style={styles.title}>Night average: </Text>
+                  <Text style={styles.title}>Night average ({wind}) </Text>
                   <ValueBox value={avgNightPrint}/>
                   </View>
           </View>
