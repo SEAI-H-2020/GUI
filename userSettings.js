@@ -162,10 +162,12 @@ export default function userSettings ({navigation}) {
                     onPress={saveChanges}>
             </ButtonBlue>
            </View>
-
+            
+            <TouchableOpacity onPress={() => navigation.navigate('login')}>
             <Image
                 source={require('../images/logout.png')}
                 style={styles.logout}/>
+            </TouchableOpacity>
 
             </ScrollView>
             <Navbar/>
